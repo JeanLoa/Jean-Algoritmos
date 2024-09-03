@@ -1,0 +1,145 @@
+#include "pch.h"
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
+using namespace std;
+using namespace System;
+
+int randnum(int min, int max) {
+	return min + rand() % (max - min + 1);
+}
+void setColor(int color) {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, color);
+}
+void resetColor() {
+	setColor(7);
+}
+class Cuadrado {
+private:
+	char forma;
+	int x, y;
+	int dx, dy;
+	int color;
+public:
+	Cuadrado(int x, int y, int dx, int dy, char forma, int color = randnum(1, 15)): x(x), y(y), dx(dx), dy(dy), forma(forma), color(color){}
+	~Cuadrado(){}
+	void mover() {
+		if (x < 50 && y == 0) {
+			x += dx;
+		}
+		else if (x == 50 && y < 25) {
+			y += dy;
+		}
+		else if (x > 0 && y == 25) {
+			x -= dx;
+		}
+		else if (x == 0 && y > 0) {
+			y -= dy;
+		}
+	}
+	void dibujar() {
+		setColor(color);
+		Console::SetCursorPosition(x, y); cout << forma << forma;
+		Console::SetCursorPosition(x, y + 1); cout << forma << forma;
+	}
+	void borrar() {
+		Console::SetCursorPosition(x, y); cout << "  ";
+		Console::SetCursorPosition(x, y + 1); cout << "  ";
+	}
+	void asignarColor(int color = randnum(1, 15)) {
+		this->color = color;
+	}
+};
+class VectordeCuadrados {
+private:
+	Cuadrado** cuadrados;
+	int n;
+public:
+	VectordeCuadrados(): n(0), cuadrados(nullptr){}
+	~VectordeCuadrados(){
+		for (int i = 0; i < n; ++i) {
+			delete cuadrados[i];
+		}
+		delete[] cuadrados;
+	}
+	void moverCuadrados() {
+		for (int i = 0; i < n; ++i) {
+			cuadrados[i]->borrar();
+			cuadrados[i]->mover();
+			cuadrados[i]->dibujar();
+		}
+	}
+	void agregarCuadrado(Cuadrado* nuevo) {
+		Cuadrado** copia = new Cuadrado * [n + 1];
+		for (int i = 0; i < n; ++i) {
+			copia[i] = cuadrados[i];
+		}
+		delete[] cuadrados;
+		copia[n] = nuevo;
+		cuadrados = copia;
+		++n;
+	}
+	void eliminarCuadrado() {
+		if (n > 0) {
+			Cuadrado** copia = new Cuadrado * [n - 1];
+			delete cuadrados[0];
+			for (int i = 1; i < n; ++i) {
+				cuadrados[i - 1] = cuadrados[i];
+			}
+			for (int i = 0; i < n - 1; ++i) {
+				copia[i] = cuadrados[i];
+			}
+			delete[] cuadrados;
+			cuadrados = copia;
+			--n;
+		}
+	}
+	void modificarColores() {
+		for (int i = 0; i < n; ++i) {
+			cuadrados[i]->asignarColor();
+		}
+	}
+	int getN() {
+		return n;
+	}
+};
+
+int main() {
+	srand(time(0));
+	const int ALMACENAMIENTO = 1000;
+	int POSICIONES_X[ALMACENAMIENTO] = {0};
+	int POSICIONES_Y[ALMACENAMIENTO] = {0};
+	int x = 0, y = 0;
+	int dx = 5, dy = 5;
+	char forma = 219;
+	
+	VectordeCuadrados* ObjCuadrados = new VectordeCuadrados;
+	Cuadrado* ObjCuadrado = new Cuadrado(POSICIONES_X[x],POSICIONES_Y[y], dx, dy, forma);
+	++x, ++y;
+	
+	ObjCuadrados->agregarCuadrado(ObjCuadrado);
+
+	while (true) {
+		resetColor();
+		Console::SetCursorPosition(0, 28);
+		cout << "Cuadrados: " << ObjCuadrados->getN();
+		ObjCuadrados->moverCuadrados();
+		if (_kbhit) {
+			char opcion = toupper(_getch());
+			if (opcion == 'A') {
+				ObjCuadrado = new Cuadrado(POSICIONES_X[x], POSICIONES_Y[y], dx, dy, forma);
+				ObjCuadrados->agregarCuadrado(ObjCuadrado);
+				++x, ++y;
+			}
+			if (opcion == 'E') {
+				ObjCuadrados->eliminarCuadrado();
+			}
+			if (opcion == 'C') {
+				ObjCuadrados->modificarColores();
+			}
+		}
+		Sleep(50);
+	}
+	return 0;
+}
