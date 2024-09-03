@@ -25,10 +25,10 @@ public:
 	Cuadrado(int x, int y, int dx, int dy, char forma, int color = randnum(1, 15)): x(x), y(y), dx(dx), dy(dy), forma(forma), color(color){}
 	~Cuadrado(){}
 	void mover() {
-		if (x < 50 && y == 0) {
+		if (x < 115 && y == 0) {
 			x += dx;
 		}
-		else if (x == 50 && y < 25) {
+		else if (x == 115 && y < 25) {
 			y += dy;
 		}
 		else if (x > 0 && y == 25) {
