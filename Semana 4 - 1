@@ -125,7 +125,7 @@ int main() {
 		Console::SetCursorPosition(0, 28);
 		cout << "Cuadrados: " << ObjCuadrados->getN();
 		ObjCuadrados->moverCuadrados();
-		if (_kbhit) {
+		if (_kbhit()) {
 			char opcion = toupper(_getch());
 			if (opcion == 'A') {
 				ObjCuadrado = new Cuadrado(POSICIONES_X[x], POSICIONES_Y[y], dx, dy, forma);
