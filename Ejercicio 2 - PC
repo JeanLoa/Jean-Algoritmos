@@ -28,7 +28,7 @@ public:
 			c = toupper(c);
 		}
 	}
-	~Proveedor() {
+	~Proveedor() {}
 
 	void setRuc(string ruc) {
 		this->ruc = ruc;
@@ -214,8 +214,7 @@ public:
 				cout << endl << endl;
 			}
 		}
-	
-
+	}
 	void mostrarProductos() {
 		for (int i = 0; i < n; ++i) {
 			cout << "ID:" << productos[i]->getId();
@@ -242,7 +241,7 @@ int main() {
 	string ruc_Proveedor;
 	string razon_social_Proveedor;
 	char categoria_Proveedor;
-	string direccion_Proveed;
+	string direccion_Proveedor;
 
 	string telefono_Proveedor;
 
