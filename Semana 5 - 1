@@ -12,7 +12,20 @@ private:
 	string fecha_regreso;
 public:
 	Boleto(){}
-	Boleto(string codigo, string fecha_salida, string fecha_regreso): codigo(codigo), fecha_salida(fecha_salida), fecha_regreso(fecha_regreso){}
+	Boleto(string codigo, string fecha_salida, string fecha_regreso){
+		for (char& c : codigo) {
+			c = toupper(c);
+		}
+		this->codigo = codigo;
+		for (char& c : fecha_salida) {
+			c = toupper(c);
+		}
+		this->fecha_salida = fecha_salida;
+		for (char& c : fecha_regreso) {
+			c = toupper(c);
+		}
+		this->fecha_regreso = fecha_regreso;
+	}
 	~Boleto() {}
 
 	string getCodigo() {
@@ -35,7 +48,16 @@ private:
 	string ubicacion;
 public:
 	Hotel(){}
-	Hotel(string nombre, string ubicacion) : nombre(nombre), ubicacion(ubicacion){}
+	Hotel(string nombre, string ubicacion){
+		for (char& c : nombre) {
+			c = toupper(c);
+		}
+		this->nombre = nombre;
+		for (char& c : ubicacion) {
+			c = toupper(c);
+		}
+		this->ubicacion = ubicacion;
+	}
 	~Hotel(){}
 	string getNombre() {
 		return nombre;
@@ -149,6 +171,9 @@ public:
 	}
 	void mostrarVacacionesMismoHotel(string hotelbuscado) {
 		if (n > 0) {
+			for (char& c : hotelbuscado) {
+				c = toupper(c);
+			}
 			for (int i = 0; i < n; ++i) {
 				if (vacaciones[i]->getNombre() == hotelbuscado) {
 					vacaciones[i]->mostrarBoleto();
