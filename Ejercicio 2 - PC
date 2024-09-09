@@ -14,21 +14,21 @@ private:
 public:
 	Proveedor() {}
 	Proveedor(string ruc, string razon_social, char categoria, string direccion, string telefono) {
-		for (char& c : ruc) {
-			c = toupper(c);
-		}
-		for (char& c : razon_social) {
-			c = toupper(c);
-		}
-		categoria = toupper(categoria);
-		for (char& c : direccion) {
-			c = toupper(c);
-		}
-		for (char& c : telefono) {
-			c = toupper(c);
-		}
+		this->ruc = toUpperString(ruc);
+		this->razon_social = toUpperString(razon_social);
+		this->categoria = toupper(categoria);
+		this->direccion = toUpperString(direccion);
+		this->telefono = toUpperString(telefono);
 	}
 	~Proveedor() {}
+
+	static string toUpperString(const string& str) {
+		string result = str;
+		for (char& c : result) {
+			c = toupper(c);
+		}
+		return result;
+	}
 
 	void setRuc(string ruc) {
 		this->ruc = ruc;
@@ -73,28 +73,18 @@ private:
 	int precio;
 public:
 	Producto() {}
-	Producto(Proveedor* proveedor, string id, string nombre, char tipo, int cantidad, char categoria, string año, int precio) {
-		this->proveedor = proveedor;
-		for (char& c : id) {
-			c = toupper(c);
-		}
-		this->id = id;
-		for (char& c : nombre) {
-			c = toupper(c);
-		}
-		this->nombre = nombre;
-		tipo = toupper(tipo);
-		this->tipo = tipo;
-		this->cantidad = cantidad;
-		categoria = toupper(categoria);
-		this->categoria = categoria;
-		for (char& c : año) {
-			this->año = año;
-		}
-		this->precio = precio;
-	}
+	Producto(Proveedor* proveedor, const string& id, const string& nombre, char tipo, int cantidad, char categoria, const string& año, int precio)
+		: proveedor(proveedor), id(toUpperString(id)), nombre(toUpperString(nombre)), tipo(toupper(tipo)), cantidad(cantidad),
+		categoria(toupper(categoria)), año(año), precio(precio) {}
 	~Producto() {
 		delete proveedor;
+	}
+	static string toUpperString(const string& str) {
+		string result = str;
+		for (char& c : result) {
+			c = toupper(c);
+		}
+		return result;
 	}
 	void setId(string id) {
 		this->id = id;
@@ -149,6 +139,9 @@ private:
 public:
 	ListaProductos() : n(0), productos(nullptr) {}
 	~ListaProductos() {
+		for (int i = 0; i < n; ++i) {
+			delete productos[i];
+		}
 		delete[] productos;
 	}
 	void agregarProducto(Producto* nuevo) {
@@ -159,6 +152,7 @@ public:
 		copia[n] = nuevo;
 		delete[] productos;
 		productos = copia;
+		++n;
 	}
 	void modificarProducto(int indice, Producto* nuevo) {
 		if (indice >= 0 && indice < n) {
@@ -180,6 +174,7 @@ public:
 			}
 			delete[] productos;
 			productos = copia;
+			--n;
 		}
 		else {
 			cout << "\nEl indice especificado no ha sido encontrado";
@@ -201,31 +196,39 @@ public:
 	}
 	void mostrarProductos_Cat_A_Natura() {
 		for (int i = 0; i < n; ++i) {
-			if (productos[i]->getProveedor()->getRazon_Social() == "HERBALIFE" && productos[i]->getCategoria() == 'A') {
-				cout << "ID:" << productos[i]->getId();
-				cout << "\nNombre:" << productos[i]->getNombre();
-				cout << "\nTipo:" << productos[i]->getTipo();
-				cout << "\nCantidad:" << productos[i]->getCantidad();
-				cout << "\nCategoria:" << productos[i]->getCategoria();
-				cout << "\nAno:" << productos[i]->getAño();
-				cout << "\nPrecio" << productos[i]->getPrecio();
-				cout << "\nRUC(Proveedor):" << productos[i]->getProveedor()->getRuc();
-				cout << "\nTelefono(Proveedor):" << productos[i]->getProveedor()->getTelefono();
+			if (productos[i]->getProveedor()->getRazon_Social() == "NATURA" && productos[i]->getCategoria() == 'A') {
+				cout << "ID: " << productos[i]->getId();
+				cout << "\nNombre: " << productos[i]->getNombre();
+				cout << "\nTipo: " << productos[i]->getTipo();
+				cout << "\nCantidad: " << productos[i]->getCantidad();
+				cout << "\nCategoria: " << productos[i]->getCategoria();
+				cout << "\nAno: " << productos[i]->getAño();
+				cout << "\nPrecio: " << productos[i]->getPrecio();
+				cout << "\nRUC (Proveedor): " << productos[i]->getProveedor()->getRuc();
+				cout << "\nTelefono (Proveedor): " << productos[i]->getProveedor()->getTelefono();
 				cout << endl << endl;
 			}
 		}
 	}
 	void mostrarProductos() {
 		for (int i = 0; i < n; ++i) {
-			cout << "ID:" << productos[i]->getId();
-			cout << "\nNombre:" << productos[i]->getNombre();
-			cout << "\nTipo:" << productos[i]->getTipo();
-			cout << "\nCantidad:" << productos[i]->getCantidad();
-			cout << "\nCategoria:" << productos[i]->getCategoria();
-			cout << "\nAno:" << productos[i]->getAño();
-			cout << "\nPrecio" << productos[i]->getPrecio();
-			cout << "\nRUC(Proveedor):" << productos[i]->getProveedor()->getRuc();
-			cout << "\nTelefono(Proveedor):" << productos[i]->getProveedor()->getTelefono();
+			cout << "Producto ID: " << productos[i]->getId();
+			cout << "\nNombre: " << productos[i]->getNombre();
+			cout << "\nTipo: " << productos[i]->getTipo();
+			cout << "\nCantidad: " << productos[i]->getCantidad();
+			cout << "\nCategoria: " << productos[i]->getCategoria();
+			cout << "\nAno: " << productos[i]->getAño();
+			cout << "\nPrecio: " << productos[i]->getPrecio();
+
+			// Aquí aseguramos que los datos del proveedor se muestren correctamente
+			Proveedor* proveedor = productos[i]->getProveedor();
+			if (proveedor != nullptr) {
+				cout << "\nProveedor RUC: " << proveedor->getRuc();
+				cout << "\nProveedor Razon Social: " << proveedor->getRazon_Social();
+				cout << "\nProveedor Categoria: " << proveedor->getCategoria();
+				cout << "\nProveedor Direccion: " << proveedor->getDireccion();
+				cout << "\nProveedor Telefono: " << proveedor->getTelefono();
+			}
 			cout << endl << endl;
 		}
 	}
@@ -351,5 +354,4 @@ int main() {
 		}
 		system("pause>0");
 	}
-	return 0;
 }
