@@ -1,0 +1,315 @@
+#include "pch.h"
+#include <iostream>
+#include <conio.h>
+#include <Windows.h>
+
+using namespace std;
+using namespace System;
+float randnum(int min, int max) {
+	return min + rand() % (max - min + 1);
+}
+float randX() {
+	return randnum(12, 70);
+}
+float randY() {
+	return randnum(2, 20);
+}
+float randDX() {
+	return 0.1 + (float)rand() / RAND_MAX;
+}
+
+void setColor(int textColor, int bgColor) {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, (bgColor << 4) | textColor);
+}
+
+void resetColor() {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 7);
+}
+
+class Terrestre {
+protected:
+	float x, y;
+	float dx;
+	int width;
+	int height;
+
+public:
+	Terrestre(float x, float y, float dx, int width, int height)
+		: x(x), y(y), dx(dx), width(width), height(height) {}
+
+	virtual ~Terrestre() {}
+
+	virtual void borrar() = 0;
+	virtual void mover() = 0;
+	virtual void dibujar() = 0;
+
+	virtual float getX() = 0;
+	virtual float getY() = 0;
+	virtual void setX(float x) = 0;
+
+	int getWidth() const { return width; }
+	int getHeight() const { return height; }
+};
+
+class Carro : public Terrestre {
+public:
+	Carro(float x, float y, float dx)
+		: Terrestre(x, y, dx, 10, 3) {}
+
+	void borrar() override {
+		Console::SetCursorPosition(x, y);     cout << string(width, ' ');
+		Console::SetCursorPosition(x, y + 1); cout << string(width, ' ');
+		Console::SetCursorPosition(x, y + 2); cout << string(width, ' ');
+	}
+
+	void mover() override {
+		if (x < 10 || x > 100) dx *= -1;
+		x += (dx > 0) ? (dx + randDX()) : (dx - randDX());
+		setX(x);
+	}
+
+	void dibujar() override {
+		Console::SetCursorPosition(x, y);     cout << "_|~\\";
+		Console::SetCursorPosition(x, y + 1); cout << "[_||-";
+		Console::SetCursorPosition(x, y + 2); cout << "() ()  ";
+	}
+
+	void setX(float x) override { this->x = x; }
+	float getX() override { return this->x; }
+	float getY() override { return this->y; }
+};
+
+class Bus : public Terrestre {
+public:
+	Bus(float x, float y, float dx)
+		: Terrestre(x, y, dx, 14, 4) {}
+
+	void borrar() override {
+		Console::SetCursorPosition(x, y);     cout << string(width, ' ');
+		Console::SetCursorPosition(x, y + 1); cout << string(width, ' ');
+		Console::SetCursorPosition(x, y + 2); cout << string(width, ' ');
+		Console::SetCursorPosition(x, y + 3); cout << string(width, ' ');
+	}
+
+	void mover() override {
+		if (x < 10 || x > 100) dx *= -1;
+		x += (dx > 0) ? (dx + randDX()) : (dx - randDX());
+		setX(x);
+	}
+
+	void dibujar() override {
+		Console::SetCursorPosition(x, y);     cout << "  _____";
+		Console::SetCursorPosition(x, y + 1); cout << "/|[][][][]|";
+		Console::SetCursorPosition(x, y + 2); cout << " (      |   |";
+		Console::SetCursorPosition(x, y + 3); cout << "=..OO----OO-=";
+	}
+
+	void setX(float x) override { this->x = x; }
+	float getX() override { return this->x; }
+	float getY() override { return this->y; }
+};
+
+class Bicicleta : public Terrestre {
+public:
+	Bicicleta(float x, float y, float dx)
+		: Terrestre(x, y, dx, 7, 2) {} // Ajusta el tamaño
+
+	void borrar() override {
+		Console::SetCursorPosition(x, y);     cout << string(width, ' ');
+		Console::SetCursorPosition(x, y + 1); cout << string(width, ' ');
+	}
+
+	void mover() override {
+		if (x < 10 || x > 100) dx *= -1;
+		x += dx;
+		setX(x);
+	}
+
+	void dibujar() override {
+		Console::SetCursorPosition(x, y);     cout << " .._\\";
+		Console::SetCursorPosition(x, y + 1); cout << "(o)(o)";
+	}
+
+	void setX(float x) override { this->x = x; }
+	float getX() override { return this->x; }
+	float getY() override { return this->y; }
+};
+
+class Persona {
+private:
+	int x, y;
+	char forma;
+public:
+	Persona(int x, int y, char forma): x(x), y(y), forma(forma) {}
+	~Persona() {}
+	void dibujar(int x, int y) {
+		setColor(2, 0);
+		Console::SetCursorPosition(x, y); cout << forma;
+		resetColor();
+	}
+	void mover(char input) {
+		switch (input) {
+		case 'W': --y;
+			break;
+		case 'A': --x;
+			break;
+		case 'S': ++y;
+			break;
+		case 'D': ++x;
+			break;
+		}
+		if (y <= 1) {
+			y = 1;
+		}
+		if (x <= 1) {
+			x = 1;
+		}
+		if (y >= 110) {
+			y = 110;
+		}
+		if (y >= 28) {
+			y = 28;
+		}
+	}
+	void borrar(int x, int y) {
+		Console::SetCursorPosition(x, y); cout << " ";
+	}
+	float getX() {
+		return this->x;
+	}
+	float getY() {
+		return this->y;
+	}
+	void setX(int x) {
+		this->x = x;
+	}
+};
+
+class Juego {
+private:
+	Persona* jugador;
+	Carro** carros;
+	int n_Carros;
+	Bus** buses;
+	int n_Buses;
+	Bicicleta** bicicletas;
+	int n_Bicicletas;
+public:
+	Juego() {
+		this->n_Carros = randnum(4, 5);
+		this->n_Bicicletas = randnum(8, 10);
+		this->n_Buses = randnum(4, 5);
+		jugador = new Persona(50, 25, 254);
+		carros = new Carro*[n_Carros];
+		for (int i = 0; i < n_Carros; ++i) {
+			carros[i] = new Carro(randX(), randY(), randDX());
+		}
+		buses = new Bus * [n_Buses];
+		for (int i = 0; i < n_Buses; ++i) {
+			buses[i] = new Bus(randX(), randY(), randDX());
+		}
+		bicicletas = new Bicicleta * [n_Bicicletas];
+		for (int i = 0; i < n_Bicicletas; ++i) {
+			bicicletas[i] = new Bicicleta(randX(), randY(), randDX());
+		}
+	}
+	void moverVehiculos() {
+		for (int i = 0; i < n_Carros; ++i) {
+			carros[i]->borrar();
+			carros[i]->mover();
+			carros[i]->dibujar();
+		}
+		for (int i = 0; i < n_Buses; ++i) {
+			buses[i]->borrar();
+			buses[i]->mover();
+			buses[i]->dibujar();
+		}
+		for (int i = 0; i < n_Bicicletas; ++i) {
+			bicicletas[i]->borrar();
+			bicicletas[i]->mover();
+			bicicletas[i]->dibujar();
+		}
+	}
+	void verificarColisiones() {
+		bool dead = false;
+		int jugadorX = jugador->getX();
+		int jugadorY = jugador->getY();
+
+		for (int i = 0; i < n_Carros; ++i) {
+			Carro* carro = carros[i];
+			float carroX = carro->getX();
+			float carroY = carro->getY();
+			int carroWidth = carro->getWidth();
+			int carroHeight = carro->getHeight();
+
+			if (jugadorX >= carroX && jugadorX < carroX + carroWidth &&
+				jugadorY >= carroY && jugadorY < carroY + carroHeight) {
+				dead = true;
+				break;
+			}
+		}
+
+		for (int i = 0; i < n_Buses; ++i) {
+			Bus* bus = buses[i];
+			float busX = bus->getX();
+			float busY = bus->getY();
+			int busWidth = bus->getWidth();
+			int busHeight = bus->getHeight();
+
+			if (jugadorX >= busX && jugadorX < busX + busWidth &&
+				jugadorY >= busY && jugadorY < busY + busHeight) {
+				dead = true;
+				break;
+			}
+		}
+
+		for (int i = 0; i < n_Bicicletas; ++i) {
+			Bicicleta* bicicleta = bicicletas[i];
+			float bicicletaX = bicicleta->getX();
+			float bicicletaY = bicicleta->getY();
+			int bicicletaWidth = bicicleta->getWidth();
+			int bicicletaHeight = bicicleta->getHeight();
+
+			if (jugadorX >= bicicletaX && jugadorX < bicicletaX + bicicletaWidth &&
+				jugadorY >= bicicletaY && jugadorY < bicicletaY + bicicletaHeight) {
+				dead = true;
+				break;
+			}
+		}
+
+		if (dead) {
+			system("cls");
+			cout << "El jugador ha chocado";
+			exit(0);
+		}
+	}
+	void iniciarJuego() {
+		Console::CursorVisible = false;
+		while (true) {
+			int x = jugador->getX();
+			int y = jugador->getY();
+			moverVehiculos();
+			jugador->dibujar(x, y);
+			
+			if (_kbhit()) {
+				int prevX = x;
+				int prevY = y;
+				char input = toupper(_getch());
+				jugador->mover(input);
+				jugador->borrar(prevX, prevY);
+				jugador->dibujar(jugador->getX(), jugador->getY());
+			}
+			verificarColisiones();
+			Sleep(100);
+		}
+	}
+};
+
+int main() {
+	srand(time(0));
+	Juego* juego = new Juego;
+	juego->iniciarJuego();
+	return 0;
+}
