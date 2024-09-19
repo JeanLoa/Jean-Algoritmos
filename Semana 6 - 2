@@ -268,7 +268,7 @@ public:
 		setColor(4);
 		system("cls");
 		cout << "El juego ha terminado";
-		cout << "\nHas cazado " << getRatones_Cazados() << " de " << getRatones_Totales();
+		cout << "\nHas cazado " << getRatones_Cazados() << " de " << getRatones_Totales() << "ratones";
 		Sleep(5000);
 		setColor(0);
 	}
