@@ -2,6 +2,7 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
+#include <iomanip>
 
 using namespace std;
 using namespace System;
@@ -36,9 +37,9 @@ protected:
 	int color;
 	const int LIM_X1 = 2, LIM_X2 = 110, LIM_Y1 = 2, LIM_Y2 = 28;
 public:
-	Animal(): x(1), y(1), dx(1), dy(1), color(8){}
+	Animal() : x(1), y(1), dx(1), dy(1), color(8) {}
 	Animal(int x, int y, int dx, int dy, int color, int ancho, int alto) : x(x), y(y), dx(dx), dy(dy), color(color), ancho(ancho), alto(alto) {}
-	virtual ~Animal(){}
+	virtual ~Animal() {}
 	virtual void dibujar() = 0;
 	virtual void borrar() = 0;
 	virtual void mover() = 0;
@@ -64,8 +65,8 @@ public:
 
 class Raton : public Animal {
 public:
-	Raton(int x, int y, int dx, int dy, int color, int ancho, int alto) : Animal(x, y, dx, dy, color, ancho, alto){}
-	~Raton(){}
+	Raton(int x, int y, int dx, int dy, int color, int ancho, int alto) : Animal(x, y, dx, dy, color, ancho, alto) {}
+	~Raton() {}
 	void dibujar() override {
 		setColor(color);
 		Console::SetCursorPosition(x, y); cout << "--(_c'>";
@@ -83,23 +84,23 @@ public:
 		setY(y);
 	}
 	void borrar() override {
-		Console::SetCursorPosition(x, y);  cout << string(7, ' ');
+		Console::SetCursorPosition(x, y);  cout << string(ancho, ' ');
 	}
 };
 
 class Gato : public Animal {
 public:
-	Gato() : Animal(1,1,1,1,3,7,3){}
-	Gato(int x, int y, int dx, int dy, int color, int ancho, int alto) : Animal(x, y, dx, dy, color, ancho, alto){}
-	~Gato(){}
+	Gato() : Animal(1, 1, 1, 1, 3, 7, 3) {}
+	Gato(int x, int y, int dx, int dy, int color, int ancho, int alto) : Animal(x, y, dx, dy, color, ancho, alto) {}
+	~Gato() {}
 	void dibujar() override {
 
 	}
 	void dibujar(int x, int y) {
 		setColor(color);
 		Console::SetCursorPosition(x, y);   cout << " /\\_/\\ ";
-		Console::SetCursorPosition(x, y+1); cout << "( o.o )";
-		Console::SetCursorPosition(x, y+2); cout << " > ^ < ";
+		Console::SetCursorPosition(x, y + 1); cout << "( o.o )";
+		Console::SetCursorPosition(x, y + 2); cout << " > ^ < ";
 	}
 	void mover() override {
 
@@ -128,19 +129,26 @@ public:
 
 	}
 	void borrar(int x, int y) {
-		Console::SetCursorPosition(x, y);   cout << string(7, ' ');
-		Console::SetCursorPosition(x, y+1); cout << string(7, ' ');
-		Console::SetCursorPosition(x, y+2); cout << string(7, ' ');
+		Console::SetCursorPosition(x, y);   cout << string(ancho, ' ');
+		Console::SetCursorPosition(x, y + 1); cout << string(ancho, ' ');
+		Console::SetCursorPosition(x, y + 2); cout << string(ancho, ' ');
 	}
 };
 
 class Juego {
 private:
+	int ratones_totales;
+	int ratones_cazados;
+	float contador;
 	Gato* gato;
 	Raton** ratones;
 	int n_Ratones;
 public:
-	Juego(int n_Ratones) : gato(new Gato(2, 2, 1, 1, 3, 7, 1)), n_Ratones(n_Ratones) {
+	Juego() : gato(new Gato(57, 14, 1, 1, 3, 7, 1)), n_Ratones(n_Ratones) {
+		ratones_cazados = 0;
+		contador = 0;
+		n_Ratones = randnum(7, 15);
+		ratones_totales = n_Ratones;
 		ratones = new Raton * [n_Ratones];
 		for (int i = 0; i < n_Ratones; ++i) {
 			ratones[i] = new Raton(randX(), randY(), randD(), randD(), 8, 7, 1);
@@ -170,6 +178,12 @@ public:
 			ratones[i]->dibujar();
 		}
 	}
+	int getRatones_Totales() {
+		return this->ratones_totales;
+	}
+	int getN_Ratones() {
+		return this->n_Ratones;
+	}
 	void eliminarRaton(int indice) {
 		delete ratones[indice];
 		for (int i = indice; i < n_Ratones - 1; ++i) {
@@ -183,6 +197,38 @@ public:
 		ratones = copia;
 		--n_Ratones;
 	}
+	void agregarRaton() {
+		Raton* nuevo = new Raton(randX(), randY(), randD(), randD(), 8, 7, 1);
+		Raton** copia = new Raton * [n_Ratones + 1];
+		for (int i = 0; i < n_Ratones; ++i) {
+			copia[i] = ratones[i];
+		}
+		copia[n_Ratones] = nuevo;
+		delete[] ratones;
+		ratones = copia;
+		++n_Ratones;
+		++ratones_totales;
+	}
+	void setRatonesCazados(int valor) {
+		this->ratones_cazados = valor;
+	}
+	int getRatones_Cazados() {
+		return this->ratones_cazados;
+	}
+	void setContador(float contador) {
+		this->contador = contador;
+	}
+	float getContador() {
+		return this->contador;
+	}
+	void mostrarContador() {
+		Console::SetCursorPosition(1, 29);
+		cout << setw(2) << getContador();
+		if (getContador() >= 2) {
+			agregarRaton();
+			setContador(0);
+		}
+	}
 	void colision() {
 		for (int i = 0; i < n_Ratones; ++i) {
 			bool eliminado = false;
@@ -194,6 +240,7 @@ public:
 						y + dy >= ratones[i]->getY() && y + dy <= ratones[i]->getY() + ratones[i]->getAlto() - 1) {
 						ratones[i]->borrar();
 						eliminarRaton(i);
+						setRatonesCazados(getRatones_Cazados() + 1);
 						eliminado = true;
 						break;
 					}
@@ -203,16 +250,26 @@ public:
 			if (eliminado) --i;
 		}
 	}
+	bool victoria() {
+		return ratones_cazados >= ratones_totales / 2;
+	}
 	void iniciarJuego() {
 		bool vic = false;
-		while (true) {
+		while (!vic) {
 			gato->dibujar(gato->getX(), gato->getY());
 			moverGato();
 			moverRatones();
 			colision();
-			if (n_Ratones == 0) break;
+			mostrarContador();
+			setContador(getContador() + 0.07);
+			vic = victoria();
 			Sleep(50);
 		}
+		setColor(4);
+		system("cls");
+		cout << "El juego ha terminado";
+		cout << "\nHas cazado " << getRatones_Cazados() << " de " << getRatones_Totales();
+		Sleep(5000);
 		setColor(0);
 	}
 };
@@ -220,7 +277,7 @@ public:
 int main() {
 	Console::CursorVisible = false;
 	srand(time(0));
-	Juego* juego = new Juego(7);
+	Juego* juego = new Juego();
 	juego->iniciarJuego();
 	return 0;
 }
