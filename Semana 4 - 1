@@ -33,13 +33,13 @@ public:
     ~Cuadrado(){}
     void dibujar() {
         setColor(color, 0);
-        Console::SetCursorPosition(x, y);     cout << forma << forma;
-        Console::SetCursorPosition(x, y + 1); cout << forma << forma;
+        Console::SetCursorPosition(x, y);     cout << forma << forma << forma;
+        Console::SetCursorPosition(x, y + 1); cout << forma << forma << forma;
         resetColor();
     }
     void borrar() {
-        Console::SetCursorPosition(x, y);     cout << "  ";
-        Console::SetCursorPosition(x, y + 1); cout << "  ";
+        Console::SetCursorPosition(x, y);     cout << "   ";
+        Console::SetCursorPosition(x, y + 1); cout << "   ";
     }
     void mover() {
         if (x < 50 && y == 0) {
