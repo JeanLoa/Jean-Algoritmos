@@ -352,12 +352,14 @@ namespace Proyecto {
 		}
 		void btDibujar_Click(System::Object^ sender, System::EventArgs^ e)
 		{
-			if (cbFigura->SelectedIndex == -1) {  // Ninguna opción seleccionada
-				// Deshabilita solo los controles esenciales
-				lbRadio->Enabled = false;
-				tbRadio->Enabled = false;
-				lbLado1Rectangulo->Enabled = false;
-				tbLado1Rectangulo->Enabled = false;
+			if (this->cbFigura->SelectedItem == nullptr) {  // Verificar si no se ha seleccionado ninguna opción
+				MessageBox::Show("Seleccione una figura válida por favor", "Advertencia", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+			figuraSeleccionada = this->cbFigura->SelectedItem->ToString();
+			if (figuraSeleccionada != "Circulo" && figuraSeleccionada != "Rectangulo" || this->cbFigura->SelectedItem == nullptr) {  // Ninguna opción seleccionada
+				MessageBox::Show("Seleccione una figura válida por favor", "Advertencia", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
 			}
 			if (this->cbFigura->SelectedItem->ToString() == "Circulo")
 			{
