@@ -1,0 +1,287 @@
+#pragma once
+
+namespace Tarea {
+
+	using namespace System;
+	using namespace System::ComponentModel;
+	using namespace System::Collections;
+	using namespace System::Windows::Forms;
+	using namespace System::Data;
+	using namespace System::Drawing;
+	using namespace System::IO;
+
+	/// <summary>
+	/// Resumen de MyForm
+	/// </summary>
+	public ref class MyForm : public System::Windows::Forms::Form
+	{
+	public:
+		MyForm(void)
+		{
+			InitializeComponent();
+			//
+			//TODO: agregar código de constructor aquí
+			//
+		}
+
+	protected:
+		/// <summary>
+		/// Limpiar los recursos que se estén usando.
+		/// </summary>
+		~MyForm()
+		{
+			if (components)
+			{
+				delete components;
+			}
+		}
+	private: System::Windows::Forms::TextBox^ tbNombre;
+	private: System::Windows::Forms::Label^ lbNombre;
+	protected:
+
+	protected:
+
+	private: System::Windows::Forms::Label^ lbPuntos;
+	private: System::Windows::Forms::NumericUpDown^ numpuntos;
+
+
+
+
+	private: System::Windows::Forms::Button^ btGuardarBin;
+	private: System::Windows::Forms::Button^ btLeerBin;
+	private: System::Windows::Forms::ListBox^ listboxBin;
+		   String^ nombre;
+		   int puntaje;
+		   DateTime^ fecha;
+	private: System::Windows::Forms::ListBox^ listboxTXT;
+	private: System::Windows::Forms::Button^ btLeerTXT;
+
+	private: System::Windows::Forms::Button^ btGuardarTXT;
+
+
+	protected:
+
+	private:
+		/// <summary>
+		/// Variable del diseñador necesaria.
+		/// </summary>
+		System::ComponentModel::Container ^components;
+
+#pragma region Windows Form Designer generated code
+		/// <summary>
+		/// Método necesario para admitir el Diseñador. No se puede modificar
+		/// el contenido de este método con el editor de código.
+		/// </summary>
+		void InitializeComponent(void)
+		{
+			this->tbNombre = (gcnew System::Windows::Forms::TextBox());
+			this->lbNombre = (gcnew System::Windows::Forms::Label());
+			this->lbPuntos = (gcnew System::Windows::Forms::Label());
+			this->numpuntos = (gcnew System::Windows::Forms::NumericUpDown());
+			this->btGuardarBin = (gcnew System::Windows::Forms::Button());
+			this->btLeerBin = (gcnew System::Windows::Forms::Button());
+			this->listboxBin = (gcnew System::Windows::Forms::ListBox());
+			this->listboxTXT = (gcnew System::Windows::Forms::ListBox());
+			this->btLeerTXT = (gcnew System::Windows::Forms::Button());
+			this->btGuardarTXT = (gcnew System::Windows::Forms::Button());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numpuntos))->BeginInit();
+			this->SuspendLayout();
+			// 
+			// tbNombre
+			// 
+			this->tbNombre->Location = System::Drawing::Point(74, 61);
+			this->tbNombre->Name = L"tbNombre";
+			this->tbNombre->Size = System::Drawing::Size(120, 22);
+			this->tbNombre->TabIndex = 0;
+			// 
+			// lbNombre
+			// 
+			this->lbNombre->AutoSize = true;
+			this->lbNombre->Location = System::Drawing::Point(12, 64);
+			this->lbNombre->Name = L"lbNombre";
+			this->lbNombre->Size = System::Drawing::Size(56, 16);
+			this->lbNombre->TabIndex = 1;
+			this->lbNombre->Text = L"Nombre";
+			// 
+			// lbPuntos
+			// 
+			this->lbPuntos->AutoSize = true;
+			this->lbPuntos->Location = System::Drawing::Point(12, 121);
+			this->lbPuntos->Name = L"lbPuntos";
+			this->lbPuntos->Size = System::Drawing::Size(48, 16);
+			this->lbPuntos->TabIndex = 2;
+			this->lbPuntos->Text = L"Puntos";
+			// 
+			// numpuntos
+			// 
+			this->numpuntos->Location = System::Drawing::Point(74, 119);
+			this->numpuntos->Name = L"numpuntos";
+			this->numpuntos->Size = System::Drawing::Size(120, 22);
+			this->numpuntos->TabIndex = 4;
+			// 
+			// btGuardarBin
+			// 
+			this->btGuardarBin->Location = System::Drawing::Point(373, 26);
+			this->btGuardarBin->Name = L"btGuardarBin";
+			this->btGuardarBin->Size = System::Drawing::Size(157, 40);
+			this->btGuardarBin->TabIndex = 5;
+			this->btGuardarBin->Text = L"Guardar en Binario";
+			this->btGuardarBin->UseVisualStyleBackColor = true;
+			this->btGuardarBin->Click += gcnew System::EventHandler(this, &MyForm::btGuardarBin_Click);
+			// 
+			// btLeerBin
+			// 
+			this->btLeerBin->Location = System::Drawing::Point(565, 26);
+			this->btLeerBin->Name = L"btLeerBin";
+			this->btLeerBin->Size = System::Drawing::Size(157, 40);
+			this->btLeerBin->TabIndex = 6;
+			this->btLeerBin->Text = L"Leer en binario";
+			this->btLeerBin->UseVisualStyleBackColor = true;
+			this->btLeerBin->Click += gcnew System::EventHandler(this, &MyForm::btLeerBin_Click);
+			// 
+			// listboxBin
+			// 
+			this->listboxBin->FormattingEnabled = true;
+			this->listboxBin->ItemHeight = 16;
+			this->listboxBin->Location = System::Drawing::Point(373, 72);
+			this->listboxBin->Name = L"listboxBin";
+			this->listboxBin->Size = System::Drawing::Size(349, 100);
+			this->listboxBin->TabIndex = 7;
+			// 
+			// listboxTXT
+			// 
+			this->listboxTXT->FormattingEnabled = true;
+			this->listboxTXT->ItemHeight = 16;
+			this->listboxTXT->Location = System::Drawing::Point(373, 234);
+			this->listboxTXT->Name = L"listboxTXT";
+			this->listboxTXT->Size = System::Drawing::Size(349, 100);
+			this->listboxTXT->TabIndex = 10;
+			// 
+			// btLeerTXT
+			// 
+			this->btLeerTXT->Location = System::Drawing::Point(565, 188);
+			this->btLeerTXT->Name = L"btLeerTXT";
+			this->btLeerTXT->Size = System::Drawing::Size(157, 40);
+			this->btLeerTXT->TabIndex = 9;
+			this->btLeerTXT->Text = L"Leer en TXT";
+			this->btLeerTXT->UseVisualStyleBackColor = true;
+			this->btLeerTXT->Click += gcnew System::EventHandler(this, &MyForm::btLeerTXT_Click);
+			// 
+			// btGuardarTXT
+			// 
+			this->btGuardarTXT->Location = System::Drawing::Point(373, 188);
+			this->btGuardarTXT->Name = L"btGuardarTXT";
+			this->btGuardarTXT->Size = System::Drawing::Size(157, 40);
+			this->btGuardarTXT->TabIndex = 8;
+			this->btGuardarTXT->Text = L"Guardar en TXT";
+			this->btGuardarTXT->UseVisualStyleBackColor = true;
+			this->btGuardarTXT->Click += gcnew System::EventHandler(this, &MyForm::btGuardarTXT_Click);
+			// 
+			// MyForm
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->ClientSize = System::Drawing::Size(815, 426);
+			this->Controls->Add(this->listboxTXT);
+			this->Controls->Add(this->btLeerTXT);
+			this->Controls->Add(this->btGuardarTXT);
+			this->Controls->Add(this->listboxBin);
+			this->Controls->Add(this->btLeerBin);
+			this->Controls->Add(this->btGuardarBin);
+			this->Controls->Add(this->numpuntos);
+			this->Controls->Add(this->lbPuntos);
+			this->Controls->Add(this->lbNombre);
+			this->Controls->Add(this->tbNombre);
+			this->Name = L"MyForm";
+			this->Text = L"Tarea";
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numpuntos))->EndInit();
+			this->ResumeLayout(false);
+			this->PerformLayout();
+
+		}
+#pragma endregion
+		private: System::Void btGuardarBin_Click(System::Object^ sender, System::EventArgs^ e) {
+			nombre = tbNombre->Text;
+			puntaje = (int)numpuntos->Value;
+			fecha = DateTime::Now;
+
+			FileStream^ archivo_binario = gcnew FileStream("datos.bin", FileMode::Append, FileAccess::Write);
+			BinaryWriter^ binario = gcnew BinaryWriter(archivo_binario);
+			try {
+				binario->Write(nombre);
+				binario->Write(puntaje);
+				binario->Write(fecha->ToBinary());
+				MessageBox::Show("Los datos fueron guardados");
+			}
+			catch(Exception^ ex) {
+				MessageBox::Show("Error al escribir el archivo" + ex->Message);
+			}
+			finally {
+				archivo_binario->Close();
+				binario->Close();
+			}
+		}
+		private: System::Void btLeerBin_Click(System::Object^ sender, System::EventArgs^ e) {
+			listboxBin->Items->Clear();
+			FileStream^ archivo_binario = gcnew FileStream("datos.bin", FileMode::OpenOrCreate, FileAccess::Read);
+			BinaryReader^ binario = gcnew BinaryReader(archivo_binario);
+			try {
+				while (archivo_binario->Position < archivo_binario->Length) {
+					String^ my_name = binario->ReadString();
+					int my_points = binario->ReadInt32();
+					DateTime my_date = DateTime::FromBinary(binario->ReadInt64());
+
+					listboxBin->Items->Add("Nombre: " + my_name + " Puntaje: " + my_points + " Fecha: " + my_date.ToString("dd-MM-yy HH:mm:ss"));
+					MessageBox::Show("Los datos han sido mostrados");
+				}
+			}
+			catch (Exception^ ex) {
+				MessageBox::Show("Error al leer el archivo " + ex->Message);
+			}
+			finally {
+				archivo_binario->Close();
+				binario->Close();
+			}
+		}
+		private: System::Void btGuardarTXT_Click(System::Object^ sender, System::EventArgs^ e) {
+			nombre = tbNombre->Text;
+			puntaje = (int)numpuntos->Value;
+			fecha = DateTime::Now;
+
+			String^ datos = nombre + ", " + puntaje + ", " + fecha->ToString("dd-MM-yy HH:mm:ss");
+			StreamWriter^ archivo_texto = gcnew StreamWriter("datos.txt", true);
+			try {
+				archivo_texto->WriteLine(datos);
+				MessageBox::Show("Los datos fueron guardados");
+			}
+			catch (Exception^ ex) {
+				MessageBox::Show("Error al escribir el archivo" + ex->Message);
+			}
+			finally {
+				archivo_texto->Close();
+			}
+		}
+		private: System::Void btLeerTXT_Click(System::Object^ sender, System::EventArgs^ e) {
+			listboxTXT->Items->Clear();
+			StreamReader^ archivo_texto = gcnew StreamReader("datos.txt");
+			try {
+				while (!archivo_texto->EndOfStream) {
+					String^ linea = archivo_texto->ReadLine();
+					array<String^>^ partes = linea->Split(',');
+					if (partes->Length == 3) {
+						String^ my_name = partes[0];
+						int^ my_points = Int32::Parse(partes[1]);
+						String^ my_date = partes[2];
+						listboxTXT->Items->Add("Nombre: " + my_name + " Puntaje: " + my_points + " Fecha: " + my_date);
+					}
+				}
+			}
+			catch (Exception^ ex) {
+				MessageBox::Show("Error al leer el archivo de texto " + ex->Message);
+			}
+			finally {
+				archivo_texto->Close();
+			}
+		}
+	};
+}
